@@ -114,7 +114,7 @@ namespace ProEventos.API.Controllers
                 if(evento == null) return NoContent();
 
                  return await _eventoService.DeleteEventos(id) ?
-                    Ok("Deletado") :
+                    Ok( new{ message = "Deletado"}) :
                     throw new Exception("Algo de errado não está certo!");
                 
             }
