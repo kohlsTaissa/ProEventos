@@ -23,7 +23,7 @@ namespace ProEventos.Application.Dtos
         public int QtdPessoas { get; set; }
 
         [RegularExpression(@".*\.(gif|jpe?g|bmp|png)$", ErrorMessage = "Formato de imagem inválido")]
-        public string ImagemUrl { get; set; } 
+        public string ImagemURL { get; set; } 
 
         [
             Display(Name = "telefone"),

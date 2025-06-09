@@ -13,6 +13,7 @@ import { Evento } from '@app/models/Evento';
 import { Lote } from '@app/models/Lote';
 import { EventoService } from '@app/services/evento.service';
 import { LoteService } from '@app/services/lote.service';
+import { environment } from '@environments/environment';
 
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -32,6 +33,8 @@ export class EventoDetalheComponent implements OnInit {
   form: FormGroup;
   loteAtual = { id: 0, nome: '', indice: 0 };
   //para o modal de confirmação de exclusão de lote
+  imagemURL = 'assets/img/upload.png';
+  file: File;
 
   get modoEditar(): boolean {
     return this.estadoSalvar === 'put';
@@ -75,24 +78,26 @@ export class EventoDetalheComponent implements OnInit {
 
     if (this.eventoId !== null && this.eventoId !== 0) {
       this.spinner.show();
+
       this.estadoSalvar = 'put';
+
       this.eventoService
         .getEventoById(this.eventoId)
         .subscribe(
           (evento: Evento) => {
-            //pegando as propriedades do evento e atribuindo ao evento
-            //evento é um objeto, então usamos o operador spread para pegar as propriedades
-            //e atribuir ao evento
             this.evento = { ...evento };
-            //para preencher o form com os dados do evento
             this.form.patchValue(this.evento);
-            this.evento.lotes.forEach((lote) => {
-              this.lotes.push(this.criarLote(lote));
-            });
+
+            if (this.evento.imagemURL && this.evento.imagemURL !== 'null') {
+              this.imagemURL =
+                environment.apiURL +
+                'resources/images/' +
+                this.evento.imagemURL;
+            }
+            this.carregarLotes();
           },
           (error: any) => {
-            this.spinner.hide();
-            this.toastr.error('Erro ao carregar evento', 'Erro!');
+            this.toastr.error('Erro ao tentar carregar Evento.', 'Erro!');
             console.error(error);
           }
         )
@@ -137,7 +142,7 @@ export class EventoDetalheComponent implements OnInit {
       qtdPessoas: ['', [Validators.required, Validators.max(120000)]],
       telefone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      imagemUrl: ['', Validators.required],
+      imagemURL: [''],
       lotes: this.formBuilder.array([]),
     });
   }
@@ -245,6 +250,39 @@ export class EventoDetalheComponent implements OnInit {
 
   declineDeleteLote(): void {
     this.modalRef.hide();
+  }
+  onFileChange(ev: any): void {
+    const reader = new FileReader();
+
+    reader.onload = (event: any) => (this.imagemURL = event.target.result);
+    this.file = ev.target.files;
+    reader.readAsDataURL(this.file[0]);
+
+    this.uploadImagem();
+  }
+
+  uploadImagem(): void {
+    this.spinner.show();
+
+    this.eventoService
+      .postUpload(this.eventoId, this.file)
+      .subscribe(
+        () => {
+          this.carregarEvento();
+          this.toastr.success(
+            'Imagem do evento atualizada com sucesso.',
+            'Sucesso!'
+          );
+        },
+        (error: any) => {
+          this.toastr.error(
+            'Erro ao tentar atualziar a imagem do evento',
+            'Erro!'
+          );
+          console.error(error);
+        }
+      )
+      .add(() => this.spinner.hide());
   }
 
   //  public mudarValorData(value: Date, indice: number, campo: string): void {
