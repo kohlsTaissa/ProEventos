@@ -54,7 +54,12 @@ namespace ProEventos.API.Controllers
                 var user = await _accountService.CreateAccountAsync(userDto);
 
                 if (user != null)
-                    return Ok(user);
+                    return Ok(new
+                {
+                    userName = user.UserName,
+                    primeiroNome = user.PrimeiroNome,
+                    token = _tokenService.CreateToken(user).Result
+                });
 
                 return BadRequest("Usuário não foi criado.");
 
@@ -81,7 +86,7 @@ namespace ProEventos.API.Controllers
                 return Ok(new
                 {
                     userName = user.UserName,
-                    PrimeiroNome = user.PrimeiroNome,
+                    primeiroNome = user.PrimeiroNome,
                     token = _tokenService.CreateToken(user).Result
                 });
             }
@@ -91,19 +96,28 @@ namespace ProEventos.API.Controllers
                 $"Erro ao tentar realizar login. Erro: {ex.Message}");
             }
         }
-        
+
         [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser(UserUpdateDto userUpdateDto)
         {
             try
             {
+                if (userUpdateDto.UserName != User.GetUserName())
+                {
+                    return Unauthorized("Deve ser o usuário logado para atualizar.");
+                }
                 var user = await _accountService.GetUserByUserNameAsync(User.GetUserName());
                 if (user == null) return Unauthorized("Deve ser o usuário logado para atualizar.");
 
                 var userReturn = await _accountService.UpdateAccount(userUpdateDto);
                 if (userReturn == null) return NoContent();
 
-                return Ok(userReturn);
+                return Ok(new
+                {
+                    userName = user.UserName,
+                    primeiroNome = user.PrimeiroNome,
+                    token = _tokenService.CreateToken(user).Result
+                });
 
             }
             catch (Exception ex)

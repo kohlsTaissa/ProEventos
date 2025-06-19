@@ -68,6 +68,7 @@ export class EventoListaComponent implements OnInit {
 
 
   public carregarEventos(): void {
+    this.spinner.show();
     this.eventoService.getEvento().subscribe({
       next: (eventos: Evento[]) => {
         this.eventos = eventos;
