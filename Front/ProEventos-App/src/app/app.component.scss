@@ -290,3 +290,20 @@
       visibility: hidden;
     }
   }
+
+  html body div#toast-container.toast-bottom-right.toast-container {
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 999999 !important;
+  transform: none !important;
+}
+
+
+body > div#toast-container.toast-bottom-right.toast-container > div.toast {
+  pointer-events: auto !important;
+  margin-bottom: 0.5rem !important;
+}
+

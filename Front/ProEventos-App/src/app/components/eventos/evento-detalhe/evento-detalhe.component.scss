@@ -22,15 +22,32 @@
   top: var(--default-height);
 }
 
-.card-evento-view{
+.card-evento-view {
   position: sticky;
   top: 10px;
 }
 
 .card-img-block {
-  img{
+  img {
     cursor: pointer;
     border-radius: 3px 3px 0 0;
     width: 100%;
   }
 }
+
+#toast-container.toast-bottom-right {
+  top: auto !important;
+  bottom: 1rem !important;
+  right: 1rem !important;
+  left: auto !important;
+  transform: none !important;
+  position: fixed !important;
+  z-index: 9999 !important;
+}
+
+.toast {
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+}
+

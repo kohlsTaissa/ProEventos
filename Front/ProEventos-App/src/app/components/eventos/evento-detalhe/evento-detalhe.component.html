@@ -2,8 +2,6 @@
   <div [ngClass]="{ 'col-md-8 pr-0': modoEditar, 'col-md-12': !modoEditar }">
     <div class="card rounded shadow-sm">
       <form [formGroup]="form">
-        <!-- <p>Form value: {{form.value | json}}</p>
-    <p>Form valid: {{form.status | json}}</p> -->
         <div class="p-3">
           <div class="form-row">
             <div class="form-group col-md-12">
@@ -54,6 +52,7 @@
                 [(ngModel)]="evento.dataEvento"
                 value="{{ evento.dataEvento }}"
                 bsDatepicker
+                [bsConfig]="bsConfig"
                 formControlName="dataEvento"
                 placeholder=""
               />
@@ -227,6 +226,7 @@
                       type="datetime"
                       class="form-control"
                       bsDatepicker
+                      [bsConfig]="bsConfig"
                       formControlName="dataInicio"
                       placeholder="01/01/2019"
                     />
@@ -238,6 +238,7 @@
                       type="datetime"
                       class="form-control"
                       bsDatepicker
+                      [bsConfig]="bsConfig"
                       formControlName="dataFim"
                       placeholder="01/01/2019"
                     />
@@ -270,7 +271,19 @@
         </div>
       </div>
     </div>
+    <div class="card rounded shadow-sm mt-3" *ngIf="modoEditar">
+      <div class="p-3">
+        <div class="d-flex border-bottom">
+          <h2 class="mr-auto">Redes Sociais do Evento</h2>
+          <h2>
+            <i class="fas fa-share-square"></i>
+          </h2>
+        </div>
+        <app-redesSociais [eventoId]="eventoId"></app-redesSociais>
+      </div>
+    </div>
   </div>
+
   <!-- Card de visualização das imagens -->
   <div class="col-md-4" *ngIf="modoEditar">
     <div [formGroup]="form" class="card-evento-view shadow-sm">
@@ -336,7 +349,7 @@
 <br />
 <ng-template #template>
   <div class="modal-body text-center">
-    <p>Te certeza que quer deletar o lote {{ this.loteAtual.nome }}?</p>
+    <p>Tem certeza que quer deletar o lote {{ this.loteAtual.nome }}?</p>
     <button type="button" class="btn btn-default" (click)="confirmDeleteLote()">
       Sim
     </button>

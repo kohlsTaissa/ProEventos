@@ -48,16 +48,15 @@ export class EventoDetalheComponent implements OnInit {
     return this.form.controls;
   }
 
-  //seria usado para configurar o datepicker, mas não está sendo usado no momento, buga a exibição da data
-  // get bsConfig(): any {
-  //   return {
-  //     adaptivePosition: true,
-  //     dateInputFormat: 'DD/MM/YYYY hh:mm',
-  //     containerClass: 'theme-default',
-  //     showWeekNumbers: false,
-  //     isAnimated: true,
-  //   };
-  // }
+  get bsConfig(): any {
+    return {
+      adaptivePosition: true,
+      dateInputFormat: 'DD/MM/YYYY hh:mm',
+      containerClass: 'theme-default',
+      showWeekNumbers: false,
+      isAnimated: true,
+    };
+  }
 
   constructor(
     private formBuilder: FormBuilder,
